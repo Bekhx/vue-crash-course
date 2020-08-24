@@ -1,17 +1,45 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="header">
+      <h1>
+      ToDoList
+    </h1>
+    <router-link class='link' to="/">Home</router-link>
+    <span class="span"> | </span>
+    <router-link class='link' to="/todos">Todos</router-link>
+    </div>
+
+    <router-view />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import AddToDo from '@/components/AddToDo'
+import ToDoList from '@/components/ToDoList'
 export default {
-  name: 'App',
+  name: 'app',
+  data() {
+    return {
+      todos: []
+    }
+  },
+  mounted() {
+    fetch('https://jsonplaceholder.typicode.com/todos?_limit=3')
+      .then(response => response.json())
+      .then(json => {
+        this.todos = json
+      })
+  },
+  methods: {
+    removeToDo(id) {
+      this.todos = this.todos.filter(t => t.id !== id)
+    },
+    addToDo(todo) {
+      this.todos.push(todo)
+    }
+  },
   components: {
-    HelloWorld
+    ToDoList, AddToDo
   }
 }
 </script>
@@ -22,7 +50,20 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color:  #2c3e50;
+}
+h1, .span, .link {
+  color: #fff;
+}
+h1 {
+  margin: 0;
+  margin-bottom: 15px;
+}
+body {
+  margin: 0;
+}
+.header {
+  background-color: #2c3e50;
+  padding: 30px 0 20px;
 }
 </style>
